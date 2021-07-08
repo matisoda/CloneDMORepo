@@ -1,22 +1,31 @@
 @echo off
 cls
-SET RepoDir=DMO
 SET RepoURLSource=<repo address with PAT>
+
 SET RepoURLDestination=<repo address with PAT>
+SET tempRepoFolderLocation=C:\TempRepos
+SET GitRepoName=DMO.git
 
-IF EXIST %RepoDir% (
-	ECHO DMO local repository already exists, updating it now...
-	cd %RepoDir%
-	git -c diff.mnemonicprefix=false -c core.quotepath=false --no-optional-locks fetch --prune --tags --all
-	git -c diff.mnemonicprefix=false -c core.quotepath=false --no-optional-locks pull --all
-) ELSE (
-	ECHO DMO local repository doesn't exist, cloning it now...
-	git clone --branch master/1.15 %RepoURLSource%
-	cd %RepoDir%
-)
+mkdir %tempRepoFolderLocation% 
+cd %tempRepoFolderLocation%
 
-ECHO Pushing DMO Repository changes remotely...
-git push --mirror --force %RepoURLDestination%
+echo Creating local temporary folder in %tempRepoFolderLocation% 
 
-cd ..
-ECHO Done
+mkdir tempRepoFolder 
+cd tempRepoFolder 
+
+git clone --bare %RepoURLSource%
+
+echo Solution support DMO repo cloned
+
+cd %GitRepoName%
+git push --mirror %RepoURLDestination%
+
+echo finished copying %RepoURLSource% to %RepoURLDestination%
+
+echo Deleting local temporary folder %tempRepoFolderLocation% 
+
+cd %tempRepoFolderLocation% 
+rmdir tempRepoFolder /s /q
+
+pause
