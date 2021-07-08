@@ -3,8 +3,9 @@ cls
 SET RepoURLSource=<repo address with PAT>
 
 SET RepoURLDestination=<repo address with PAT>
-SET tempRepoFolderLocation=C:\TempRepos
+SET tempRepoFolderLocation=C:\DMORepositoryClone
 SET GitRepoName=DMO.git
+SET param1=%1
 
 mkdir %tempRepoFolderLocation% 
 cd %tempRepoFolderLocation%
@@ -23,9 +24,15 @@ git push --mirror %RepoURLDestination%
 
 echo finished copying %RepoURLSource% to %RepoURLDestination%
 
-echo Deleting local temporary folder %tempRepoFolderLocation% 
+echo Deleting local temporary folder tempRepoFolder on %tempRepoFolderLocation% 
 
 cd %tempRepoFolderLocation% 
 rmdir tempRepoFolder /s /q
 
-pause
+
+set pauseMe=1
+if "%param1%"=="SkipPause" set pauseMe=0
+
+if %pauseMe%==1 pause
+
+
